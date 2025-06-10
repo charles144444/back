@@ -1,0 +1,33 @@
+require('dotenv').config();
+const { Pool } = require('pg');
+
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD, typeof process.env.DB_PASSWORD);
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
+
+pool.on('connect', () => {
+  console.log('Successfully connected to Supabase PostgreSQL database');
+});
+
+pool.on('error', (err) => {
+  console.error('Database connection error:', err.stack);
+});
+
+(async () => {
+  try {
+    const client = await pool.connect();
+    console.log('Database client acquired');
+    await client.query('SELECT NOW()');
+    console.log('Database connection test successful');
+    client.release();
+  } catch (err) {
+    console.error('Database connection test failed:', err.stack);
+  }
+})();
+
+module.exports = pool;
