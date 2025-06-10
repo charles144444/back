@@ -10,7 +10,11 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // For local testing
+  // Add your deployed frontend URL (e.g., 'https://your-frontend-url.com') after deployment
+  credentials: true
+}));
 app.use(express.json());
 
 // Auth middleware
@@ -70,7 +74,6 @@ app.post('/api/login', async (req, res) => {
     if (!valid) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
-    // Create JWT
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email, is_admin: user.is_admin },
       JWT_SECRET,
