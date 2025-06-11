@@ -12,8 +12,10 @@ console.log("JWT_SECRET loaded by server:", SECRET);
 
 // Middleware to handle JSON parsing
 app.use(cors({
-  origin: 'http://localhost:5173', // For local testing
-  // Add your deployed frontend URL (e.g., 'https://your-frontend-url.com') after deployment
+  origin: [
+    'http://localhost:5173', // For local testing
+    'https://real-estate-t5vb.onrender.com' // Deployed frontend
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" }));
